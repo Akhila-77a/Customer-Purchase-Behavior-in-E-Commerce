@@ -1,0 +1,11 @@
+SELECT TOP 1 WITH TIES 
+    C.CustomerID,
+    C.CustomerName,
+    P.Category,
+    COUNT(*) AS PurchaseCount
+FROM Customers C
+JOIN Orders O ON C.CustomerID = O.CustomerID
+JOIN OrderItems OI ON O.OrderID = OI.OrderID
+JOIN Products P ON OI.ProductID = P.ProductID
+GROUP BY C.CustomerID, C.CustomerName, P.Category
+ORDER BY ROW_NUMBER() OVER (PARTITION BY C.CustomerID ORDER BY COUNT(*) DESC);
